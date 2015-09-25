@@ -1,0 +1,15 @@
+{
+	"RabbitMQ": {
+		"host": "localhost",
+		"port": 5672,
+		"virtual_host": "/",
+		"username": "guest",
+		"password": "guest",
+		"exchange_name": "naoned",
+		"queue_name": "naoned"
+	},
+	"ElasticSearch": {
+		"host": "localhost",
+		"port": "9200"
+	}
+}
