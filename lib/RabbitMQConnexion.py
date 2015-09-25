@@ -1,10 +1,15 @@
 import pika
 import logging
 
-LOG_FORMAT = ('%(levelname) -10s %(asctime)s %(name) -30s %(funcName) '
-              '-35s %(lineno) -5d: %(message)s')
 LOGGER = logging.getLogger(__name__)
-
+hdlr = logging.FileHandler('/var/log/nao-elastic-river-rabbitmq.log')
+ch = logging.StreamHandler()
+formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+hdlr.setFormatter(formatter)
+LOGGER.addHandler(hdlr) 
+ch.setFormatter(formatter)
+LOGGER.addHandler(ch) 
+LOGGER.setLevel(logging.WARNING)
 
 class RabbitMQConnection(object):
     """This class allows to get a basic RabbitMQ connexion on a particular exchange
@@ -21,11 +26,16 @@ class RabbitMQConnection(object):
         
 
     def connect(self):
-        self._connection = pika.BlockingConnection(pika.ConnectionParameters(
-            host=self._host,
-            port=self._port,
-            virtual_host=self._vitual_host,
-            credentials=self._credentials))
+        try:
+            self._connection = pika.BlockingConnection(pika.ConnectionParameters(
+                host=self._host,
+                port=self._port,
+                virtual_host=self._vitual_host,
+                credentials=self._credentials))
+        except:
+            LOGGER.error("Connexion to RabbitMQ failed")
+            return 0
+
         self._channel = self._connection.channel()
 
         self._channel.exchange_declare(exchange=self._exchange_name, type='fanout')

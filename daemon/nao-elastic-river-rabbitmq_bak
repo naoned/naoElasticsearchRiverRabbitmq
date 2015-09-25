@@ -1,0 +1,83 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides: nao-elastic-river-rabbitmq
+# Required-Start: $local_fs $network
+# Required-Stop: $local_fs $remote_fs
+# Default-Start: 2 3 4 5
+# Default-Stop: 0 1 6
+# Short-Description: Startup/shutdown script for an ElasticSearch river for RabbitMQ
+# Description: Startup/shutdown script for an ElasticSearch river for RabbitMQ
+### END INIT INFO
+
+LOG_PATH="%log_path%"
+DAEMON_PATH="%MYPATH%"
+PROG="nao-elastic-river-rabbitmq"
+DAEMON_APP="python"
+SCRIPT="bin/naoRiver.py"
+ARGS=""
+LOCK_FILE="${DAEMON_PATH}/.state.lock"
+
+start () {
+    echo "Starting $PROG: "
+    if [ ! -f "$LOCK_FILE" ]; then
+        echo "Error, process $PROG is already running. Use 'forcerestart' if needed."
+        return 0
+    fi
+    cd $DAEMON_PATH && $DAEMON_APP $SCRIPT $ARGS &
+        RETVAL=$?
+    echo
+    [ $RETVAL = 0 ] && $LOCK_FILE
+    return $RETVAL
+}
+
+stop () {
+    if [ ! -f "$LOCK_FILE" ]; then
+        echo "Process $PROG is not running. Use forcestop if this is incorrect."
+        return 0
+    fi
+    realstop
+}
+
+realstop () {
+    echo "Stopping $PROG: "
+    rm -f "$LOCK_FILE" 2> /dev/null
+    return 0
+}
+
+restart() {
+    stop
+    start
+}
+
+forcestop () {
+    realstop
+}
+forcerestart() {
+    forcestop
+    start
+}
+
+
+case $1 in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    restart)
+        restart
+        ;;
+    forcerestart)
+        forcerestart
+        ;;
+    forcestop)
+        forcestop
+        ;;
+    *)
+        echo "Usage: $PROG {start|stop|restart|forcestop|forcerestart}"
+        exit 3
+        ;;
+esac
+
+exit $RETVAL
