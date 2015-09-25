@@ -12,7 +12,6 @@ class RabbitMQConnection(object):
     """
 
     def __init__(self, config):
-        print "host = " + config["host"]
         self._host = config["host"]
         self._port = config["port"]
         self._vitual_host = config["virtual_host"]
@@ -45,5 +44,5 @@ class RabbitMQConnection(object):
     def ackMessage(self, deliveryTag):
         return self._channel.basic_ack(deliveryTag)
 
-    def close():
-        self._connexion.close()
+    def close(self):
+        self._connection.close()

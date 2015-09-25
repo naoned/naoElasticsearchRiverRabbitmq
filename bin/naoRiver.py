@@ -22,20 +22,20 @@ def is_json(myjson):
 
 config = read_config("{0}/../config.json".format(dir))
 elasticBulkUrl = 'http://{0}:{1}/_bulk'.format(config["ElasticSearch"]["host"], config["ElasticSearch"]["port"])
+stateFile = dir + "/../.state.lock"
+if os.path.isfile(stateFile):
+	print "Error: an instance of this script is already running"
+	sys.exit(1)
+os.mknod(stateFile)
 
 RMQConnexion = RabbitMQConnection(config["RabbitMQ"])
 RMQConnexion.connect()
 
 print 'Naoned river starts !'
-print ' [*] Waiting for messages. To exit press CTRL+C'
-
-# def callback(ch, method, properties, body):
-#     print " [x] %r" % (body,)
 
 try:
-	while True:
+	while os.path.isfile(stateFile):
 
-		#method_frame, header_frame, msg = channel.basic_get(queue_name)
 		method_frame, header_frame, msg = RMQConnexion.getMessage()
 
 		if method_frame:
@@ -43,11 +43,11 @@ try:
 				if is_json(msg):
 
 					print "Send to Elastic !"
+					# @TODO
 					# req = urllib2.Request(elasticBulkUrl, data=msg, headers={'Content-type': 'text/plain'})
 					# response = urllib2.urlopen(req)
 					# # print response.info()
 
-					#urllib2.urlopen(elasticBulkUrl, json_msg)
 				else:
 					print "Error : message is not a valid JSON. msg = {0}".format(msg)
 			else:
@@ -59,5 +59,9 @@ try:
 
 # Catch a Keyboard Interrupt to make sure that the connection is closed cleanly
 except KeyboardInterrupt:
-	print "close !"
-	RMQConnexion.close()
+	print "Interrupt by keyboard!"
+
+RMQConnexion.close()
+
+if os.path.isfile(stateFile):
+	os.remove(stateFile)
