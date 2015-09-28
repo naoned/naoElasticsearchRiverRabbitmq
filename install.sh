@@ -10,6 +10,7 @@ echo "Installation to ${DIR_TARGET} ..."
 [ -d "${DIR_TARGET}" ] && rm -rf ${DIR_TARGET}
 mkdir "${DIR_TARGET}"
 cp -r "${DIR}"/* "${DIR_TARGET}"
+[ -d "${DIR_TARGET}/log" ] && rm -rf "${DIR_TARGET}/log"
 mkdir ${DIR_TARGET}/log
 sudo chown -R $HTTPDUSER:$HTTPDUSER $DIR_TARGET
 
