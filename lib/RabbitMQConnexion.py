@@ -1,14 +1,17 @@
 import pika
 import logging
+import os
+
+dir = os.path.dirname(os.path.realpath(__file__)) + "/.."
 
 LOGGER = logging.getLogger(__name__)
-hdlr = logging.FileHandler('/var/log/nao-elastic-river-rabbitmq.log')
+hdlr = logging.FileHandler(dir + '/log/nao-elastic-river-rabbitmq.log')
 ch = logging.StreamHandler()
 formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
 hdlr.setFormatter(formatter)
-LOGGER.addHandler(hdlr) 
+LOGGER.addHandler(hdlr)
 ch.setFormatter(formatter)
-LOGGER.addHandler(ch) 
+LOGGER.addHandler(ch)
 LOGGER.setLevel(logging.WARNING)
 
 class RabbitMQConnection(object):
@@ -23,7 +26,7 @@ class RabbitMQConnection(object):
         self._exchange_name = config["exchange_name"]
         self._queue_name = config["queue_name"]
         self._credentials = pika.PlainCredentials(config["username"], config["password"])
-        
+
 
     def connect(self):
         try:

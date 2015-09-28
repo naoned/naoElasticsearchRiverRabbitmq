@@ -7,21 +7,21 @@ import os
 import sys
 import logging
 
+dir = os.path.dirname(os.path.realpath(__file__)) + "/.."
+
 LOGGER = logging.getLogger(__name__)
-hdlr = logging.FileHandler('/var/log/nao-elastic-river-rabbitmq.log')
+hdlr = logging.FileHandler(dir + '/log/nao-elastic-river-rabbitmq.log')
 ch = logging.StreamHandler()
 formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
 hdlr.setFormatter(formatter)
-LOGGER.addHandler(hdlr) 
+LOGGER.addHandler(hdlr)
 ch.setFormatter(formatter)
-LOGGER.addHandler(ch) 
+LOGGER.addHandler(ch)
 LOGGER.setLevel(logging.WARNING)
 
 
 ### Import lib
-dir = os.path.dirname(os.path.realpath(__file__))
-sys.path.append(os.path.abspath(dir + "/.."))
-
+sys.path.append(os.path.abspath(dir))
 from lib.RabbitMQConnexion import *
 from lib.Config import *
 
@@ -33,9 +33,9 @@ def is_json(myjson):
 	return True
 
 
-config = read_config("{0}/../config.json".format(dir))
+config = read_config("{0}/config.json".format(dir))
 elasticBulkUrl = 'http://{0}:{1}/_bulk'.format(config["ElasticSearch"]["host"], config["ElasticSearch"]["port"])
-stateFile = dir + "/../.state.lock"
+stateFile = dir + "/.state.lock"
 if os.path.isfile(stateFile):
 	LOGGER.error("Error: an instance of this script is already running")
 	sys.exit(1)
@@ -70,7 +70,7 @@ try:
 				print "Message is received in test mode: {0}".format(msg)
 				OGGER.error("Message is received in test mode: %s", msg)
 			RMQConnexion.ackMessage(method_frame.delivery_tag)
-			
+
 		else:
 			time.sleep(1)
 
