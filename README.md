@@ -22,7 +22,7 @@ or
 
     $ easy_install pika
 
-# Usage simple launch
+# First test and simple run
 
 In a terminal, launch the service :
 
@@ -33,6 +33,8 @@ Send a test message to test the service (this message will not be send to Elasti
 	$ python test/send.py [your message]
 
 # Daemonize
+
+This command install all the files needed by the service :
 
     $ ./install.sh
 
