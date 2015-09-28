@@ -4,16 +4,6 @@ import os
 
 dir = os.path.dirname(os.path.realpath(__file__)) + "/.."
 
-LOGGER = logging.getLogger(__name__)
-hdlr = logging.FileHandler(dir + '/log/nao-elastic-river-rabbitmq.log')
-ch = logging.StreamHandler()
-formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
-hdlr.setFormatter(formatter)
-LOGGER.addHandler(hdlr)
-ch.setFormatter(formatter)
-LOGGER.addHandler(ch)
-LOGGER.setLevel(logging.WARNING)
-
 class RabbitMQConnection(object):
     """This class allows to get a basic RabbitMQ connexion on a particular exchange
 
@@ -27,6 +17,8 @@ class RabbitMQConnection(object):
         self._queue_name = config["queue_name"]
         self._credentials = pika.PlainCredentials(config["username"], config["password"])
 
+    def setLogger(self, LOGGER):
+        self._LOGGER = LOGGER;
 
     def connect(self):
         try:
@@ -36,8 +28,12 @@ class RabbitMQConnection(object):
                 virtual_host=self._vitual_host,
                 credentials=self._credentials))
         except:
-            LOGGER.error("Connexion to RabbitMQ failed")
+            if hasattr(self, '_LOGGER'):
+                self._LOGGER.error("Connexion to RabbitMQ failed")
             return 0
+
+        if hasattr(self, '_LOGGER'):
+            self._LOGGER.info("Connexion to RabbitMQ ok")
 
         self._channel = self._connection.channel()
 

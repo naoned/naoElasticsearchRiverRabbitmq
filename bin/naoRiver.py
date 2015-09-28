@@ -2,52 +2,40 @@
 import pika
 import time
 import urllib2
-import json
 import os
 import sys
 import logging
+import datetime
 
 dir = os.path.dirname(os.path.realpath(__file__)) + "/.."
-
-LOGGER = logging.getLogger(__name__)
-hdlr = logging.FileHandler(dir + '/log/nao-elastic-river-rabbitmq.log')
-ch = logging.StreamHandler()
-formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
-hdlr.setFormatter(formatter)
-LOGGER.addHandler(hdlr)
-ch.setFormatter(formatter)
-LOGGER.addHandler(ch)
-LOGGER.setLevel(logging.WARNING)
-
 
 ### Import lib
 sys.path.append(os.path.abspath(dir))
 from lib.RabbitMQConnexion import *
 from lib.Config import *
+from lib.Logs import *
 
-def is_json(myjson):
-	try:
-		json_object = json.loads(myjson)
-	except ValueError, e:
-		return False
-	return True
+LOGGER = configureLog(dir)
 
-
+# Config
 config = read_config("{0}/config.json".format(dir))
 elasticBulkUrl = 'http://{0}:{1}/_bulk'.format(config["ElasticSearch"]["host"], config["ElasticSearch"]["port"])
 stateFile = dir + "/.state.lock"
+
+# Only one instance of this script could run at once. Otherwise who get message?
 if os.path.isfile(stateFile):
 	LOGGER.error("Error: an instance of this script is already running")
 	sys.exit(1)
 os.mknod(stateFile)
 
-LOGGER.info('Connexion to RabbitMQ')
+LOGGER.info('Start naoRiver')
+
+# Connection to RabbitMQ
 RMQConnexion = RabbitMQConnection(config["RabbitMQ"])
+RMQConnexion.setLogger(LOGGER)
 RMQConnexion.connect()
 
-print 'Start'
-LOGGER.info('Start')
-
+# Execution
 try:
 	while os.path.isfile(stateFile):
 
@@ -56,19 +44,14 @@ try:
 		if method_frame:
 			LOGGER.info('Message received [%s]', msg)
 			if method_frame.routing_key != "test":
-				if is_json(msg):
+					try:
+						req = urllib2.Request(elasticBulkUrl, data=msg, headers={'Content-type': 'text/plain'})
+						response = urllib2.urlopen(req)
+					except:
+						LOGGER.error("Bad request with message: %s", msg)
 
-					print "Send to Elastic !"
-					# @todo
-					# req = urllib2.Request(elasticBulkUrl, data=msg, headers={'Content-type': 'text/plain'})
-					# response = urllib2.urlopen(req)
-					# # print response.info()
-
-				else:
-					LOGGER.error("Error : message is not a valid JSON %s", msg)
 			else:
-				print "Message is received in test mode: {0}".format(msg)
-				OGGER.error("Message is received in test mode: %s", msg)
+				LOGGER.error("Message is received in test mode: %s", msg)
 			RMQConnexion.ackMessage(method_frame.delivery_tag)
 
 		else:
@@ -78,8 +61,10 @@ try:
 except KeyboardInterrupt:
 	LOGGER.info("Interrupt by keyboard")
 
+# Close properly
 RMQConnexion.close()
-LOGGER.info('Stop')
 
 if os.path.isfile(stateFile):
 	os.remove(stateFile)
+
+LOGGER.info('Stop naoRiver')
