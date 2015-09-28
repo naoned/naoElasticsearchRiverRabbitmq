@@ -16,11 +16,11 @@ Python install:
 
 Pika install:
 
-    $ pip install pika
+    $ sudo pip install pika
 
 or
 
-    $ easy_install pika
+    $ sudo easy_install pika
 
 
 # First test and simple run
@@ -49,7 +49,7 @@ If it's not your case, you can choose another user, or disable this functionalit
 
 Then you can start/stop the daemon :
 
-    $ /etc/init.d/nao-elastic-river-rabbitmq (start|stop|restart|status)
+    $ sudo /etc/init.d/nao-elastic-river-rabbitmq (start|stop|restart|status)
 
 
 # Uninstall
