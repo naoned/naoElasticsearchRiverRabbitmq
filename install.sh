@@ -24,4 +24,5 @@ chmod +x /etc/init.d/nao-elastic-river-rabbitmq
 sudo update-rc.d nao-elastic-river-rabbitmq defaults 99
 
 echo ""
-echo "done"
+echo "Done"
+echo ""
