@@ -31,7 +31,10 @@ In a terminal, launch the service :
 
 Send a test message to test the service (this message will not be send to ElasticSearch) :
 
-	$ python test/send.py [your message]
+	$ python test/send.py "your message"
+
+To configure this service with RabbitMQ and ElasticSearch, please see below
+
 
 # Install as daemon
 
@@ -43,9 +46,11 @@ Then you can start/stop the daemon :
 
     $ /etc/init.d/nao-elastic-river-rabbitmq (start|stop|restart|status)
 
+
 # Uninstall
 
     $ sudo ./uninstall.sh
+
 
 # Configuration
 Configure the service can easily be done by editing the configfile config.json :
