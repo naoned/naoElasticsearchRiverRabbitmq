@@ -2,8 +2,13 @@
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 DIR_TARGET="/opt/nao-elastic-river-rabbitmq/"
+
 # User who can interact with the dameon. In our case, the web server can control it
-USER=`ps aux | grep -E '[a]pache|[h]ttpd|[_]www|[w]ww-data|[n]ginx' | grep -v root | head -1 | cut -d\  -f1`
+if [ $# -gt 0 ]; then
+	USER=$1
+else
+	USER=`ps aux | grep -E '[a]pache|[h]ttpd|[_]www|[w]ww-data|[n]ginx' | grep -v root | head -1 | cut -d\  -f1`
+fi
 
 # Installation of source files
 echo ""

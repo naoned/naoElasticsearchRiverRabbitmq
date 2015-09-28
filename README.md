@@ -1,6 +1,6 @@
 # naoRabbitMQRiver
 
-This service simulate a RabbitMQ river for ElasticSearch
+This service simulate a RabbitMQ river for ElasticSearch. This project was created as rivers in ElasticSearch are now deprecated
 
 It allows to index / update / delete documents in ElasticSearch from a RabbitMQ exchange
 The format of messages needs to be in bulk api format :
@@ -36,11 +36,16 @@ Send a test message to test the service (this message will not be send to Elasti
 To configure this service with RabbitMQ and ElasticSearch, please see below
 
 
-# Install as daemon
+# Installation as daemon
 
 This command install all the files needed by the service :
 
     $ sudo ./install.sh
+
+In installation script a user is specified in order to interact with this daemon. In our case it's our web server's user. That's mean our web server can start/stop the service.
+If it's not your case, you can choose another user, or disable this functionality with "root" user :
+
+    $ sudo ./install.sh <user>
 
 Then you can start/stop the daemon :
 

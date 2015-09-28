@@ -55,6 +55,7 @@ try:
 			RMQConnexion.ackMessage(method_frame.delivery_tag)
 
 		else:
+			# Let's the processor sleeps for a while ;)
 			time.sleep(1)
 
 # Catch a Keyboard Interrupt to make sure that the connection is closed cleanly
