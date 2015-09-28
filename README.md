@@ -22,6 +22,7 @@ or
 
     $ easy_install pika
 
+
 # First test and simple run
 
 In a terminal, launch the service :
@@ -32,12 +33,37 @@ Send a test message to test the service (this message will not be send to Elasti
 
 	$ python test/send.py [your message]
 
-# Daemonize
+# Install as daemon
 
 This command install all the files needed by the service :
 
-    $ ./install.sh
+    $ sudo ./install.sh
 
 Then you can start/stop the daemon :
 
     $ /etc/init.d/nao-elastic-river-rabbitmq (start|stop|restart|status)
+
+# Uninstall
+
+    $ sudo ./uninstall.sh
+
+# Configuration
+Configure the service can easily be done by editing the configfile config.json :
+
+    {
+    	"RabbitMQ": {
+    		"host": "localhost",
+    		"port": 5672,
+    		"virtual_host": "/",
+    		"username": "guest",
+    		"password": "guest",
+    		"exchange_name": "naoned",
+    		"queue_name": "naoned"
+    	},
+    	"ElasticSearch": {
+    		"host": "localhost",
+    		"port": "9200"
+    	}
+    }
+
+If you install the service as a dameon, the location is /opt/nao-elastic-river-rabbitmq/config.json
