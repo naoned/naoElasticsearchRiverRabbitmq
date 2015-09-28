@@ -29,7 +29,7 @@ In a terminal, launch the service :
 
     $ python bin/naoRiver.py
 
-Send a test message to test the service (this message will not be send to ElasticSearch) :
+Send a test message to test the service (this message will not be sent to ElasticSearch) :
 
 	$ python test/send.py "your message"
 
