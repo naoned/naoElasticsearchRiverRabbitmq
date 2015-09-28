@@ -25,7 +25,8 @@ DAEMON_ARGS="--options args"
 PIDFILE=/var/run/$NAME.pid
 SCRIPTNAME=/etc/init.d/$NAME
 LOCK_FILE="/opt/nao-elastic-river-rabbitmq/.state.lock"
-USER="%user%"
+LOG_PATH="/opt/nao-elastic-river-rabbitmq/log"
+USER="%user%" # This user has the rights to stop the daemon
 
 # Exit if the package is not installed
 [ -x "$DAEMON" ] || exit 0
@@ -47,16 +48,17 @@ do_start()
 	#   1 if daemon was already running
 	#   2 if daemon could not be started
 
-	if [ -f $LOCK_FILE ]; then
+	if [ -f "$LOCK_FILE" ]; then
         echo "Error, process $PROG is already running. Use 'forcerestart' if needed."
         return 1
     fi
 
-	su -l $USER -s /bin/bash -c "$DAEMON" &
+	chown -R $USER:$USER "$LOG_PATH"
+	"$DAEMON" &
 	sleep 1
+	chown $USER:$USER "$LOCK_FILE"
 
 	NBR=$(ps -eF | grep $NAME | grep -v grep | wc -l)
-	echo "NBR = $NBR"
 	if [ $NBR = 0 ]; then
 		return 2
 	fi
@@ -86,10 +88,10 @@ do_stop()
 	fi
 	sleep 2
 
-	# On vérifie que le daemon est bien stoppé
+	# We verify that the dameon is finished
 	NBR=$(ps -eF | grep $NAME | grep -v grep | wc -l)
 	if [ $NBR != 0 ]; then
-		# On essaye de killer par la force
+		# Try to force kill
 		pkill $NAME
 		sleep 1
 		NBR=$(ps -eF | grep $NAME | grep -v grep | wc -l)
