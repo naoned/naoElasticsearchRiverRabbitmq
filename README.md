@@ -1,20 +1,21 @@
 # naoRabbitMQRiver
 
-This service simulate a RabbitMQ river for ElasticSearch. This project was created as rivers in ElasticSearch are now deprecated
+This service simulate a [RabbitMQ](https://www.rabbitmq.com/) river for [ElasticSearch](https://www.elastic.co). This project was created as rivers in ElasticSearch are now [deprecated](https://www.elastic.co/blog/deprecating-rivers).
 
-It allows to index / update / delete documents in ElasticSearch from a RabbitMQ exchange
-The format of messages needs to be in bulk api format :
-https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-bulk.html
+It allows to index / update / delete documents in ElasticSearch from a RabbitMQ exchange.
+The format of messages needs to be in [bulk api format](https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-bulk.html)
 
 
 # Requirements
 
-Python install:
+Please refer to [Python](https://www.python.org) and [Pika](http://pika.readthedocs.org/en/latest/) to install on your own configuration.
+
+Python installon on debian:
 
     $ sudo apt-get install python-setuptools git-core
     $ sudo easy_install pip
 
-Pika install:
+Pika install on debian:
 
     $ sudo pip install pika
 
@@ -23,7 +24,7 @@ or
     $ sudo easy_install pika
 
 
-# First test and simple run
+# Firsts tests and simple run
 
 In a terminal, launch the service :
 
@@ -36,7 +37,7 @@ Send a test message to test the service (this message will not be sent to Elasti
 To configure this service with RabbitMQ and ElasticSearch, please see below
 
 
-# Installation as daemon
+# Installation as a service
 
 This command install all the files needed by the service :
 
