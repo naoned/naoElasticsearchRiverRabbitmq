@@ -7,9 +7,7 @@ HTTPDUSER=`ps aux | grep -E '[a]pache|[h]ttpd|[_]www|[w]ww-data|[n]ginx' | grep 
 # Installation of source files
 echo ""
 echo "Installation to ${DIR_TARGET} ..."
-if [ -d "${DIR_TARGET}" ]; then
-	rm -rf ${DIR_TARGET}
-fi
+[ -d "${DIR_TARGET}" ] && rm -rf ${DIR_TARGET}
 mkdir "${DIR_TARGET}"
 cp -r "${DIR}"/* "${DIR_TARGET}"
 mkdir ${DIR_TARGET}/log
@@ -17,9 +15,7 @@ sudo chown -R $HTTPDUSER:$HTTPDUSER $DIR_TARGET
 
 # Creation of the service
 echo "Create service..."
-if [ -f "/usr/bin/nao-elastic-river-rabbitmq.sh" ]; then
-	rm -f "/usr/bin/nao-elastic-river-rabbitmq.sh"
-fi
+[ -f "/usr/bin/nao-elastic-river-rabbitmq.sh" ] && rm -f "/usr/bin/nao-elastic-river-rabbitmq.sh"
 sudo ln -s "${DIR_TARGET}/daemon/nao-elastic-river-rabbitmq.sh" /usr/bin/nao-elastic-river-rabbitmq.sh
 cp "${DIR_TARGET}/daemon/nao-elastic-river-rabbitmq" /etc/init.d/
 sed -i "/etc/init.d/nao-elastic-river-rabbitmq" -e "s/%user%/www-data/g"
