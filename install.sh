@@ -32,5 +32,3 @@ sudo update-rc.d nao-elastic-river-rabbitmq defaults 99
 echo ""
 echo "Done"
 echo ""
-
-return 0
