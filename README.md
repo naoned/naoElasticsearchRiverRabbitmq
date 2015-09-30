@@ -43,12 +43,10 @@ This command install all the files needed by the service :
 
     $ sudo ./install.sh
 
-In installation script a user is specified in order to interact with this daemon. In our case it's our web server's user. That's mean our web server can start/stop the service.
-If it's not your case, you can choose another user, or disable this functionality with "root" user :
+In installation script a user is specified in order to interact with this daemon. The user is "naoriver" and it was created by this script.
+In order to interact with the daemon, you have to start and stop the dameon with a "naoriver" user, a user in the group "naoriver", or of course with "root" user.
 
-    $ sudo ./install.sh <user>
-
-Then you can start/stop the daemon :
+To start/stop the daemon :
 
     $ sudo /etc/init.d/nao-elastic-river-rabbitmq (start|stop|restart|status)
 
