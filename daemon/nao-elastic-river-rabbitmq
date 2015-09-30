@@ -54,15 +54,19 @@ do_start()
     fi
 
 	chown -R $USER:$USER "$LOG_PATH"
-	"$DAEMON" &
-	sleep 1
-	chown $USER:$USER "$LOCK_FILE"
+	chmod -R 775 "$LOG_PATH"
 
-	NBR=$(ps -eF | grep $NAME | grep -v grep | wc -l)
-	if [ $NBR = 0 ]; then
+	"$DAEMON" &
+
+	sleep 2
+	chown $USER:$USER "$LOCK_FILE"
+	chmod 775 "$LOCK_FILE"
+
+	NB_PROCESS=$(ps -eF | grep $NAME | grep -v grep | wc -l)
+	if [ $NB_PROCESS = 0 ]; then
 		return 2
 	fi
-	if [ "$NBR" != "0" ]; then
+	if [ "$NB_PROCESS" != "0" ]; then
 		return 0
 	fi
 }
@@ -89,13 +93,13 @@ do_stop()
 	sleep 2
 
 	# We verify that the dameon is finished
-	NBR=$(ps -eF | grep $NAME | grep -v grep | wc -l)
-	if [ $NBR != 0 ]; then
+	NB_PROCESS=$(ps -eF | grep $NAME | grep -v grep | wc -l)
+	if [ $NB_PROCESS != 0 ]; then
 		# Try to force kill
 		pkill $NAME
 		sleep 1
-		NBR=$(ps -eF | grep $NAME | grep -v grep | wc -l)
-		if [ $NBR != 0 ]; then
+		NB_PROCESS=$(ps -eF | grep $NAME | grep -v grep | wc -l)
+		if [ $NB_PROCESS != 0 ]; then
 			return 2
 		fi
 	fi
@@ -108,8 +112,8 @@ do_status()
 	# Return
 	#   0 if daemon is working
 	#   1 if daemon is not working
-	NBR=$(ps -eF | grep $NAME | grep -v grep | wc -l)
-	if [ $NBR = 0 ]; then
+	NB_PROCESS=$(ps -eF | grep $NAME | grep -v grep | wc -l)
+	if [ $NB_PROCESS = 0 ]; then
 		return 1;
 	fi
 	return 0;
