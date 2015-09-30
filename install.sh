@@ -24,7 +24,6 @@ echo "Create service..."
 [ -f "/usr/bin/nao-elastic-river-rabbitmq.sh" ] && rm -f "/usr/bin/nao-elastic-river-rabbitmq.sh"
 sudo ln -s "${DIR_TARGET}/daemon/nao-elastic-river-rabbitmq.sh" /usr/bin/nao-elastic-river-rabbitmq.sh
 cp "${DIR_TARGET}/daemon/nao-elastic-river-rabbitmq" /etc/init.d/
-sed -i "/etc/init.d/nao-elastic-river-rabbitmq" -e "s/%user%/$USER/g"
 chmod +x /etc/init.d/nao-elastic-river-rabbitmq
 sudo update-rc.d nao-elastic-river-rabbitmq defaults 99
 

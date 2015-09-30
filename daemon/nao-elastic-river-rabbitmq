@@ -26,7 +26,7 @@ PIDFILE=/var/run/$NAME.pid
 SCRIPTNAME=/etc/init.d/$NAME
 LOCK_FILE="/opt/nao-elastic-river-rabbitmq/.state.lock"
 LOG_PATH="/opt/nao-elastic-river-rabbitmq/log"
-USER="%user%" # This user has the rights to stop the daemon
+USER="naoriver" # This user has the rights to stop the daemon
 
 # Exit if the package is not installed
 [ -x "$DAEMON" ] || exit 0
