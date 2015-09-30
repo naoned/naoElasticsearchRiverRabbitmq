@@ -53,13 +53,13 @@ do_start()
         return 1
     fi
 
-	chown -R $USER:$USER "$LOG_PATH"
+	chgrp -R $USER "$LOG_PATH"
 	chmod -R 775 "$LOG_PATH"
 
-	"$DAEMON" &
-
+	$DAEMON &
 	sleep 2
-	chown $USER:$USER "$LOCK_FILE"
+
+	chgrp $USER "$LOCK_FILE"
 	chmod 775 "$LOCK_FILE"
 
 	NB_PROCESS=$(ps -eF | grep $NAME | grep -v grep | wc -l)
@@ -86,6 +86,7 @@ do_stop()
 		return 1
 	fi
 
+	echo "Stopping..."
 	rm -f $LOCK_FILE
 	if [ -f "$LOCK_FILE" ]; then
 		return 2
