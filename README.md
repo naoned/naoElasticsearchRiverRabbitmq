@@ -9,6 +9,7 @@ The format of messages needs to be in [bulk api format](https://www.elastic.co/g
 # Requirements
 
 Python 2.6+ and 3.3+ are supported.
+
 Please refer to [Python](https://www.python.org) and [Pika](http://pika.readthedocs.org/en/latest/) to install on your own configuration.
 
 Python install on on debian:
